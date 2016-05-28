@@ -12,10 +12,12 @@ public enum TypeEnemy
 public class Enemy : MonoBehaviour {
 
     
+    public bool isCheat;
     public TypeEnemy type;
     public Vector3 speed;
     public GameObject txtMesegbox;
-    private bool isTouch = false;
+    public Transform pos;
+    public bool isTouch = false;
     private float timeChangeDir = 0;
     private bool isPause;
     public CircleCollider2D circleCol;
@@ -32,6 +34,7 @@ public class Enemy : MonoBehaviour {
     {
         isPause = false;
     }
+    private bool isAddList = false;
 	// Update is called once per frame
 	void Update () {
 
@@ -39,50 +42,93 @@ public class Enemy : MonoBehaviour {
         {
             Move();
         }
-        if(isTouch)
+        if (isTouch)
         {
-            transform.localPosition = Vector3.MoveTowards(transform.localPosition, GameController.main.boundEnemy.getPosEnd(), 0.1f);
+            if (!isAddList)
+            {
+
+                transform.position = Vector3.MoveTowards(transform.position, posTarget.position, 0.1f);
+
+                if (Vector3.Distance(transform.position, posTarget.position) <= 0.2f)
+                {
+                    //Debug.Log("asdsaas");
+                    isAddList = true;
+                    speed = new Vector3(0, -0.8f, 0);
+                    transform.position = posTarget.position;
+
+                }
+                //Move();
+            }
+        }
+        if (isAddList)
+        {
+            Move();
         }
 	}
-
+    public  Transform posTarget;
     public virtual void OnMouseDown()
     {
         if (!isTouch && TouchController.main.isTouch)
         {
+
+            Test();
             isPause = false;
             TouchController.main.isMiss = false;
             Meseggbox();
-            isTouch = true;
-            transform.SetParent(GameController.main.boundEnemy.transform);
-            //transform.DOLocalMoveX(0, 0.3f, false).OnComplete(() => AddEnemy());
-            //MoveTweenPos(GameController.main.boundEnemy.SetPosEnd());
-            GameController.main.UpdateScore(1);
+            BoundEnemy.main.AddListWait(this);
         }
+    }
+    public void Test()
+    {
+        posTarget = BoundEnemy.main.GetPosTarget();
+        
+        if (circleCol != null)
+            circleCol.isTrigger = true;
+
+        isTouch = true;
+        //if (GameController.main != null)
+        transform.SetParent(GameController.main.boundEnemy.transform);
+        //transform.DOLocalMoveX(0, 0.3f, false).OnComplete(() => AddEnemy());
+        //MoveTweenPos(BoundEnemy.main.transEnd.localPosition, TimeMove(transform.position, BoundEnemy.main.transform.position));
+        GameController.main.UpdateScore(1);
+
+
+    }
+    float TimeMove(Vector3 pos,Vector3 posEnd)
+    {
+        float distance = Vector3.Distance(posEnd, pos);
+        return distance / 2.5f;
     }
     public Vector3 posEnd;
     public virtual void Move()
     {
         
     }
-    public void MoveTweenPos(Vector3 pos)
+    public void MoveTweenPos(Vector3 pos, float time)
     {
-        transform.SetParent(GameController.main.boundEnemy.transform);
-        transform.DOLocalMove(pos, 1.0f, false).OnComplete(() => AddEnemy());
+        //transform.SetParent(GameController.main.boundEnemy.transform);
+        transform.DOLocalMove(pos, time, false).OnComplete(() => AddEnemy());
     }
     void AddEnemy()
     {
         //speed = new Vector3(0, -6, 0);
-        SpawnEnemy.main.AddEnemy(this);
+        //SpawnEnemy.main.AddEnemy(this);
+        GameController.main.boundEnemy.AddListWait(this);
+        //speed = new vector3(0, -0.8f, 0);
+        //isaddlist = true;
     }
+
     public void MoveTween(float pos)
     {
         transform.DOLocalMoveY(pos, 0.3f, false);
     }
     void Meseggbox()
     {
-        
-        txtMesegbox.SetActive(true);
-        StartCoroutine(DeMesseggBox());
+        if (txtMesegbox != null)
+        {
+            txtMesegbox.SetActive(true);
+            StartCoroutine(DeMesseggBox());
+        }
     }
     IEnumerator DeMesseggBox()
     {

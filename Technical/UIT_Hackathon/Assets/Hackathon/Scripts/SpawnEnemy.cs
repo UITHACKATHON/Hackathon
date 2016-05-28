@@ -42,8 +42,9 @@ public class SpawnEnemy : MonoBehaviour {
             int randPos = Random.Range(0, listPosSpawn.Count);
             if (randPos == 2)
             {
-                enemy.transform.position = listPosSpawn[randPos].position;
-                AddEnemy(enemy.GetComponent<Enemy>());
+                Destroy(enemy);
+                //enemy.transform.position = listPosSpawn[randPos].position;
+                //AddEnemy(enemy.GetComponent<Enemy>());
             }
             else
             {
@@ -63,6 +64,11 @@ public class SpawnEnemy : MonoBehaviour {
             Enemy e = enemy.GetComponent<Enemy>();
             if (enemy != null)
             {
+                if (BoxSlow.main.countBox <= 2)
+                {
+                    e.isCheat = true;
+                }
+                AddEnemy(e);
                 if (randPos == 2)
                 {
                     e.speed = new Vector3(0, -4, 0);
@@ -82,6 +88,13 @@ public class SpawnEnemy : MonoBehaviour {
         if(!listEnemyCurrent.Contains(enemy))
         {
             listEnemyCurrent.Add(enemy);
+        }
+    }
+    public void ChangeSpeed()
+    {
+        for(int i = 0; i<listEnemyCurrent.Count;i++)
+        {
+            listEnemyCurrent[i].isCheat = false;
         }
     }
     public void RemoveEnemy(Enemy enemy)

@@ -4,34 +4,41 @@ using System.Collections.Generic;
 
 public class BoundEnemy : MonoBehaviour {
 
+    public float speedMove;
     public List<Enemy> listWait;
     public SpawnEnemy spawnEnemy;
     private float timeDestroy = 0;
     public BoxCollider2D box;
-    private Vector3 transEnd = Vector3.zero;
+    public Transform transEnd;// = Vector3.zero;
 
-    public List<Transform> listPos;
-    
+    public static BoundEnemy main;
     
 	// Use this for initialization
 	void Start () {
-	
+        main = this;
+        transEnd.localPosition = Vector3.zero;
 	}
-	public Vector3 getPosEnd()
-    {
-        
-        return transEnd;
 
-    }
 	// Update is called once per frame
 	void Update () {
-        if (timeDestroy > 2)
+        if (listWait.Count > 0)
         {
-            //DestroyByTime();
-            timeDestroy = 0;
+            //transEnd.localPosition = new Vector3(0, listWait[listWait.Count - 1].transform.localPosition.y + 0.2f, 0);
+            //transEnd.localPosition = listWait[listWait.Count - 1].pos.localPosition;
         }
-        timeDestroy += Time.deltaTime;
+        if(listWait.Count <= 0)
+        {
+            //transEnd.localPosition = Vector3.zero;
+        }
 	}
+    public Transform GetPosTarget()
+    {
+        if(listWait.Count > 0)
+        {
+            return listWait[listWait.Count - 1].pos;
+        }
+        return transEnd;
+    }
     public void AddListWait(Enemy enemy)
     {
         if(!listWait.Contains(enemy))
@@ -39,100 +46,46 @@ public class BoundEnemy : MonoBehaviour {
             listWait.Add(enemy);
         }
     }
-    void DestroyByTime()
+    public void ChangeSpeedEnemy(float _speed)
     {
-        //if (listWait.Count > 0)
-        //{
-        //    if (listWait[0] != null)
-        //    {
-        //        Destroy(listWait[0].gameObject);
-        //        listWait.Remove(listWait[0]);
-        //        if(listWait.Count>0)
-        //        {
-        //            listWait[0].MoveTween(0.9f);
-        //        }
-        //        if(listWait.Count > 1)
-        //        {
-        //            listWait[1].MoveTween(1.6f);
-        //        }
-
-        //    }
-        //    ///asadsad
-        //}
-        if(listWait.Count > 2)
+        for (int i = 0; i < listWait.Count; i++)
         {
-            
-            for(int i = 1;i<listWait.Count;i++)
-            {
-                listWait[i].MoveTween(listWait[i - 1].transform.localPosition.y);
-            }
-            Destroy(listWait[0].gameObject);
-            listWait.Remove(listWait[0]);
-            transEnd = listPos[SpawnEnemy.main.listEnemyCurrent.Count + 1].localPosition;
-            return;
+            listWait[i].speed = new Vector3(0, _speed, 0);
         }
-        if (listWait.Count > 0)
-        {
-            if (listWait[0] != null)
-            {
-                Destroy(listWait[0].gameObject);
-                listWait.Remove(listWait[0]);
-                if (listWait.Count > 0)
-                {
-                    listWait[0].MoveTween(0.9f);
-                }
-                if (listWait.Count > 1)
-                {
-                    listWait[1].MoveTween(1.6f);
-                }
-            }
-            transEnd = listPos[SpawnEnemy.main.listEnemyCurrent.Count + 1].localPosition;
-            return;
-        }
-        
-    }
-    public Vector3 SetPosEnd()
-    {
-        if(listWait.Count > 4)
-        {
-            return listPos[4].localPosition;
-        }
-        else
-        {
-            if(listWait.Count  == 0)
-            {
-                return listPos[0].localPosition;
-            }
-            if (listWait.Count == 1)
-            {
-                return listPos[1].localPosition;
-            }
-            if (listWait.Count == 2)
-            {
-                return listPos[2].localPosition;
-            }
-            if (listWait.Count == 3)
-            {
-                return listPos[3].localPosition;
-            }
-            if (listWait.Count == 4)
-            {
-                return listPos[4].localPosition;
-            }
-        }
-        return Vector3.zero;
     }
     void OnTriggerEnter2D(Collider2D col)
     {
-        //if(col.tag == "Enemy")
-        //{
-        //    Enemy e = col.GetComponent<Enemy>();
-        //    e.speed = Vector3.zero;
-        //    e.transform.SetParent(transform);
-        //    spawnEnemy.RemoveEnemy(e);
-        //    listWait.Add(e);
-        //    transEnd = listPos[listWait.Count + 1];
-        //}
+        if (col.tag == "Enemy")
+        {
+            Enemy e = col.GetComponent<Enemy>();
+            Destroy(e.gameObject);
+            listWait.Remove(e);
+            //e.speed.y = speedMove;
+            //e.transform.SetParent(transform);
+            //spawnEnemy.RemoveEnemy(e);
+            //listWait.Add(e);
+            //transEnd = listPos[listWait.Count + 1];
+        }
     }
-
+    void ChangeSpeedEnemy()
+    {
+        for(int i =0 ;i<listWait.Count - 1; i++)
+        {
+            for (int j = i + 1; j < listWait.Count; j++)
+            {
+                if(Vector3.Distance(listWait[j].transform.localPosition, listWait[i].transform.localPosition) < 0.7f)
+                {
+                    listWait[j].speed = new Vector3(0, -0.5f, 0);
+                }
+                //if (Vector3.Distance(listWait[i].transform.localPosition, listWait[i].transform.localPosition) > 1.1f)
+                //{
+                //    listWait[j].speed = new Vector3(0, -1.2f, 0);
+                //}
+                //else
+                //{
+                //    listWait[i].speed = new Vector3(0, -0.8f, 0);
+                //}
+            }
+        }
+    }
 }
