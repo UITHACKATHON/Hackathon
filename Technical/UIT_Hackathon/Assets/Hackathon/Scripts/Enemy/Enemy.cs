@@ -11,12 +11,14 @@ public enum TypeEnemy
 }
 public class Enemy : MonoBehaviour {
 
+    
     public TypeEnemy type;
     public Vector3 speed;
     public GameObject txtMesegbox;
     private bool isTouch = false;
     private float timeChangeDir = 0;
     private bool isPause;
+    public CircleCollider2D circleCol;
 	// Use this for initialization
 	void Start () {
         ItemPause.ActionOnPause += Pause;
@@ -33,9 +35,13 @@ public class Enemy : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (!isPause)
+        if (!isPause && !isTouch)
         {
             Move();
+        }
+        if(isTouch)
+        {
+            transform.localPosition = Vector3.MoveTowards(transform.localPosition, GameController.main.boundEnemy.getPosEnd(), 0.1f);
         }
 	}
 
@@ -47,18 +53,25 @@ public class Enemy : MonoBehaviour {
             TouchController.main.isMiss = false;
             Meseggbox();
             isTouch = true;
-            
-            transform.DOLocalMoveX(0, 0.3f, false).OnComplete(() => AddEnemy());
+            transform.SetParent(GameController.main.boundEnemy.transform);
+            //transform.DOLocalMoveX(0, 0.3f, false).OnComplete(() => AddEnemy());
+            //MoveTweenPos(GameController.main.boundEnemy.SetPosEnd());
             GameController.main.UpdateScore(1);
         }
     }
+    public Vector3 posEnd;
     public virtual void Move()
     {
         
     }
+    public void MoveTweenPos(Vector3 pos)
+    {
+        transform.SetParent(GameController.main.boundEnemy.transform);
+        transform.DOLocalMove(pos, 1.0f, false).OnComplete(() => AddEnemy());
+    }
     void AddEnemy()
     {
-        speed = new Vector3(0, -6, 0);
+        //speed = new Vector3(0, -6, 0);
         SpawnEnemy.main.AddEnemy(this);
     }
     public void MoveTween(float pos)
@@ -81,8 +94,7 @@ public class Enemy : MonoBehaviour {
     {
         if(col.tag == "Bound")
         {
-            GameController.main.UpdateLive(-1);
-            Destroy(gameObject);
+            speed = Vector3.zero;
         }
     }
 }

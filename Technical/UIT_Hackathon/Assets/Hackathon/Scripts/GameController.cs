@@ -9,7 +9,8 @@ public class GameController : MonoBehaviour {
     public GameObject panelGameOver;
     public GameObject objGamePlay;
     public static GameController main;
-
+    public BoundEnemy boundEnemy;
+    //
     public Text txtLive;
     public Text txtScore;
 	// Use this for initialization

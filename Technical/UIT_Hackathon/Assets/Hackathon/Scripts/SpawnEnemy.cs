@@ -12,6 +12,7 @@ public class SpawnEnemy : MonoBehaviour {
     public List<Enemy> listEnemyCurrent;
     private bool isSpawn = true;
     public static SpawnEnemy main;
+    public Transform posEnd;
 	// Use this for initialization
 	void Start () {
         main = this;
@@ -41,10 +42,24 @@ public class SpawnEnemy : MonoBehaviour {
             int randPos = Random.Range(0, listPosSpawn.Count);
             if (randPos == 2)
             {
+                enemy.transform.position = listPosSpawn[randPos].position;
                 AddEnemy(enemy.GetComponent<Enemy>());
-              
             }
-            enemy.transform.position = listPosSpawn[randPos].position;
+            else
+            {
+                int index = Random.Range(0, 10);
+                if(index % 2== 0)
+                {
+                    enemy.transform.position = new Vector3(Random.Range(-2.5f, -1f), transform.position.y, 0);
+                }
+                else
+                {
+                    enemy.transform.position = new Vector3(Random.Range(1f, 2.5f), transform.position.y, 0);
+                }
+                
+            }
+
+            
             Enemy e = enemy.GetComponent<Enemy>();
             if (enemy != null)
             {
