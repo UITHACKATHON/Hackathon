@@ -22,6 +22,7 @@ public class ItemPause : MonoBehaviour {
         if (ActionOnPause != null)
         {
             ActionOnPause();
+            Invoke("EventOnResumne", 2);
         }
     }
     [ContextMenu("Item Resumne")]

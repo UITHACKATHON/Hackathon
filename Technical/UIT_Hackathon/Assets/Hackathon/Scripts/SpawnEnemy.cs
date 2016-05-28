@@ -50,11 +50,11 @@ public class SpawnEnemy : MonoBehaviour {
             {
                 if (randPos == 2)
                 {
-                    e.speed = new Vector3(0, -8, 0);
+                    e.speed = new Vector3(0, -4, 0);
                 }
                 else
                 {
-                    e.speed = new Vector3(0, -Random.Range(2.0f, 6.0f), 0);
+                    e.speed = new Vector3(0, -Random.Range(2.0f, 4.0f), 0);
                 }
             }
 

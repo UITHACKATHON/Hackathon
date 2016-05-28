@@ -41,7 +41,7 @@ public class Enemy : MonoBehaviour {
 
     public virtual void OnMouseDown()
     {
-        if (!isTouch)
+        if (!isTouch && TouchController.main.isTouch)
         {
             isPause = false;
             TouchController.main.isMiss = false;
@@ -49,6 +49,7 @@ public class Enemy : MonoBehaviour {
             isTouch = true;
             
             transform.DOLocalMoveX(0, 0.3f, false).OnComplete(() => AddEnemy());
+            GameController.main.UpdateScore(1);
         }
     }
     public virtual void Move()
@@ -57,7 +58,7 @@ public class Enemy : MonoBehaviour {
     }
     void AddEnemy()
     {
-        speed = new Vector3(0, -10, 0);
+        speed = new Vector3(0, -6, 0);
         SpawnEnemy.main.AddEnemy(this);
     }
     public void MoveTween(float pos)
@@ -74,5 +75,14 @@ public class Enemy : MonoBehaviour {
     {
         yield return new WaitForSeconds(0.3f);
         txtMesegbox.SetActive(false);
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if(col.tag == "Bound")
+        {
+            GameController.main.UpdateLive(-1);
+            Destroy(gameObject);
+        }
     }
 }

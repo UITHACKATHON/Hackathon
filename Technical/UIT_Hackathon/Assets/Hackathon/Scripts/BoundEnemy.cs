@@ -14,7 +14,7 @@ public class BoundEnemy : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	    if(timeDestroy > 2)
+        if (timeDestroy > 2)
         {
             DestroyByTime();
             timeDestroy = 0;
@@ -25,17 +25,37 @@ public class BoundEnemy : MonoBehaviour {
     {
         if (listWait.Count > 0)
         {
-            Destroy(listWait[0].gameObject);
-            listWait.Remove(listWait[0]);
-            listWait[0].MoveTween(0.805f);
-            listWait[1].MoveTween(1.5f);
+            if (listWait[0] != null)
+            {
+                Destroy(listWait[0].gameObject);
+                listWait.Remove(listWait[0]);
+                if(listWait.Count>0)
+                {
+                    listWait[0].MoveTween(0.9f);
+                }
+                if(listWait.Count > 1)
+                {
+                    listWait[1].MoveTween(1.6f);
+                }
+
+            }
+            ///asadsad
         }
     }
     void OnTriggerEnter2D(Collider2D col)
     {
         if(col.tag == "Enemy")
         {
-            spawnEnemy.RemoveEnemy(col.GetComponent<Enemy>());
+            Enemy e = col.GetComponent<Enemy>();
+            e.speed = Vector3.zero;
+            e.transform.SetParent(transform);
+            spawnEnemy.RemoveEnemy(e);
+            listWait.Add(e);
+            if (listWait.Count > 2)
+            {
+                DestroyByTime();
+            }
+
         }
     }
 
