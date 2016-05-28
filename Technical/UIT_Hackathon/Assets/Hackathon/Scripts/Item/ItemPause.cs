@@ -4,12 +4,14 @@ using System;
 
 public class ItemPause : MonoBehaviour {
 
-
+    public static ItemPause main;
     public static event Action ActionOnPause;
     public static event Action ActionOnResumne;
 	// Use this for initialization
 	void Start () {
-	
+        main = this;
+        //EventOnPause();
+
 	}
 	
 	// Update is called once per frame

@@ -16,7 +16,7 @@ public class EnemyWalk : Enemy {
             if (isBla == false)
             {
                 float a = speed.y * Time.deltaTime;
-                transform.position = Vector3.MoveTowards(transform.position, BoundEnemy.main.transEnd.position, -a);
+                transform.position = Vector3.MoveTowards(transform.position, BoundEnemy.main.transEnd.position , -a);
                 if(Vector3.Distance(transform.position, BoundEnemy.main.transEnd.position) < 0.1f)
                 {
                     isBla = true;

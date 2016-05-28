@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour {
     public bool isCheat;
     public TypeEnemy type;
     public Vector3 speed;
-    public GameObject txtMesegbox;
+    public SpriteRenderer txtMesegbox;
     public Transform pos;
     public bool isTouch = false;
     private float timeChangeDir = 0;
@@ -81,7 +81,7 @@ public class Enemy : MonoBehaviour {
     public void Test()
     {
         posTarget = BoundEnemy.main.GetPosTarget();
-        
+
         if (circleCol != null)
             circleCol.isTrigger = true;
 
@@ -126,14 +126,15 @@ public class Enemy : MonoBehaviour {
     {
         if (txtMesegbox != null)
         {
-            txtMesegbox.SetActive(true);
+            txtMesegbox.sprite = GameController.main.GetSprite();
+            txtMesegbox.gameObject.SetActive(true);
             StartCoroutine(DeMesseggBox());
         }
     }
     IEnumerator DeMesseggBox()
     {
-        yield return new WaitForSeconds(0.3f);
-        txtMesegbox.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        txtMesegbox.gameObject.SetActive(false);
     }
 
     void OnTriggerEnter2D(Collider2D col)

@@ -2,36 +2,41 @@
 using System.Collections;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Collections.Generic;
 public class Danger : MonoBehaviour {
 
+    public static Danger main;
+    public Animator anim;
     public Image imageDanger;
-    private float speed = 0.1f;
-    private Color32 color;
-    private float timeChange;
+    public List<GameObject> listEnemy;
 	// Use this for initialization
 	void Start () {
-        color = imageDanger.color;
+        main = this;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        StartDanger();
 	}
-    float a = 0;
-    void StartDanger()
+    public void StartDanger()
     {
-        if(timeChange > 1)
+        anim.SetBool("isDanger", true);
+    }
+    public void EndDanger()
+    {
+        anim.SetBool("isDanger", false);
+    }
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if(col.tag == "Enemy")
         {
-            color = new Color32(color.r, color.g, color.b, 0);
-            timeChange -= Time.deltaTime;
+            if(!listEnemy.Contains(col.gameObject))
+            {
+                listEnemy.Add(col.gameObject);
+                if(listEnemy.Count > 10)
+                {
+                    GameController.main.GameOver();
+                }
+            }
         }
-        if (timeChange < 0)
-        {
-            color = new Color32(color.r, color.g, color.b, 1);
-            //a -= speed * Time.deltaTime;
-            timeChange += Time.deltaTime;
-            //imageDanger.color = Color32.Lerp(imageDanger.color, color, speed);
-        }
-        imageDanger.color = Color32.Lerp(imageDanger.color, color, speed);
     }
 }

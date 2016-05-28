@@ -8,6 +8,7 @@ public class BoxSlow : MonoBehaviour {
     public int countBox;
     public List<Enemy> listEnemy;
     public BoxCollider2D box;
+    public BoxCollider2D box2;
 	// Use this for initialization
 	void Start () {
         main = this;
@@ -29,6 +30,10 @@ public class BoxSlow : MonoBehaviour {
         //}
         
 	}
+    public void SetLenghtBox(float lengt)
+    {
+        box2.size = new Vector2(box2.size.x, lengt * 0.75f);
+    }
     void RemoveList()
     {
         for(int i =0 ;i <listEnemy.Count;i++)
@@ -44,11 +49,11 @@ public class BoxSlow : MonoBehaviour {
         if (col.gameObject.tag == "Enemy")
         {
             Enemy e = col.gameObject.GetComponent<Enemy>();
-            if (e.isCheat == true && countBox <= 2)
+            if (e.isCheat == true && countBox < 2)
             {
                 countBox++;
                 //e.OnMouseDown();
-                e.Test();
+                //e.Test();
             }
         }
     }
@@ -63,7 +68,7 @@ public class BoxSlow : MonoBehaviour {
                 
 
             }
-            if(BoundEnemy.main.listWait.Count >= 3)
+            if(BoundEnemy.main.listWait.Count >= 3 && col.transform.localPosition.y < 0.5f)
             {
                 BoundEnemy.main.ChangeSpeedEnemy(0);
             }

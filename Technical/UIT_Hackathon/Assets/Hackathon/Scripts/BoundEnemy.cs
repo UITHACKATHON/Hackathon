@@ -30,6 +30,7 @@ public class BoundEnemy : MonoBehaviour {
         {
             //transEnd.localPosition = Vector3.zero;
         }
+
 	}
     public Transform GetPosTarget()
     {
@@ -44,6 +45,20 @@ public class BoundEnemy : MonoBehaviour {
         if(!listWait.Contains(enemy))
         {
             listWait.Add(enemy);
+            BoxSlow.main.SetLenghtBox(listWait.Count);
+            if (listWait.Count > 12)
+            {
+                GameController.main.GameOver();
+            }
+            if(listWait.Count> 8)
+            {
+                Danger.main.StartDanger();
+            }
+            else
+            {
+                Danger.main.EndDanger();
+            }
+
         }
     }
     public void ChangeSpeedEnemy(float _speed)
