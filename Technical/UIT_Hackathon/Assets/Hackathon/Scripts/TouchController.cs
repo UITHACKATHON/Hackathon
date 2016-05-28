@@ -1,26 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
-
-public class TouchController : MonoBehaviour {
-
-    void Update()
+using UnityEngine.EventSystems;
+public class TouchController : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
+{
+    public bool isMiss;
+    public static TouchController main;
+    void Start()
     {
-        //Touch();
+        main = this;
     }
-    void Touch()
+
+    public void OnPointerUp(PointerEventData eventData)
     {
-        if(Input.GetMouseButtonDown(0))
+        //throw new System.NotImplementedException();
+        if(isMiss)
         {
-            Debug.Log("Asds  asdsadas");
-            transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
+            Debug.Log("Miss");
         }
-
+        isMiss = true;
     }
-    void OnMouseDown()
+
+    public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("TOuch Roi ");
-        Destroy(gameObject);
+        //Debug.Log("Miss");
+        //throw new System.NotImplementedException();
     }
-
 }
