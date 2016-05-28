@@ -75,6 +75,8 @@ public class BoundEnemy : MonoBehaviour {
             Enemy e = col.GetComponent<Enemy>();
             Destroy(e.gameObject);
             listWait.Remove(e);
+            BoxSlow.main.SetLenghtBox(listWait.Count);
+            //BoxSlow.main.SetLenghtBox()
             //e.speed.y = speedMove;
             //e.transform.SetParent(transform);
             //spawnEnemy.RemoveEnemy(e);

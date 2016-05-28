@@ -29,6 +29,7 @@ public class Danger : MonoBehaviour {
     {
         if(col.tag == "Enemy")
         {
+            Debug.Log("ASdsa");
             if(!listEnemy.Contains(col.gameObject))
             {
                 listEnemy.Add(col.gameObject);

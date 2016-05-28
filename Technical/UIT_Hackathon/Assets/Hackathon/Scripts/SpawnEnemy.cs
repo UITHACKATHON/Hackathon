@@ -4,7 +4,11 @@ using System.Collections.Generic;
 
 public class SpawnEnemy : MonoBehaviour {
 
+    public List<int> listCountEnemy;
     public int countEnemy;
+    public float timeOut;
+    public float timeIn;
+    public float ratioTime;
     public float timeDelaySpawn;
     public int level;
     public float timeSpawn = 0;
@@ -21,6 +25,8 @@ public class SpawnEnemy : MonoBehaviour {
         isSpawn = false;
         ItemPause.ActionOnPause += PauseSpawn;
         ItemPause.ActionOnResumne += ResumneSpawn;
+        //DesignLevel.main.Calculogic();
+        
 	}
 	void PauseSpawn()
     {
@@ -35,8 +41,9 @@ public class SpawnEnemy : MonoBehaviour {
         if (isSpawn)
             Spawn();
 	}
-    void CreateEnemy()
+    IEnumerator  CreateEnemy()
     {
+        yield return new WaitForSeconds(timeDelaySpawn);
         int rand = Random.Range(0, listEnemy.Count);
 
         GameObject enemy = Instantiate(listEnemy[rand], Vector3.zero, Quaternion.identity) as GameObject;
@@ -85,15 +92,36 @@ public class SpawnEnemy : MonoBehaviour {
     {
         if (timeDelay >= timeSpawn)
         {
-            for (int i = 0; i < countEnemy; i++)
-            {
+            //int rand = Random.Range(0, countEnemy);
+            //Debug.Log("Count = " + rand);
+            //if (rand == 0)
+            //{
+            //    timeSpawn += timeOut;
+            //    timeDelay = 0;
+            //    countEnemy ++;
+            //    return;
+            //}
+            //else
+            //{
+                for (int i = 0; i < countEnemy; i++)
+                {
+                    StartCoroutine(CreateEnemy());
 
-                Invoke("CreateEnemy", timeDelaySpawn);
-            }
-            timeDelay = 0;
-
+                    //Invoke("CreateEnemy", timeDelaySpawn);
+                }
+                countEnemy = Random.Range(min, max);
+                timeDelay = 0;
+            //}
         }
         timeDelay += Time.deltaTime;
+    }
+    public int max;
+    public int min;
+    public void Design(float _timeDelay, int _min, int _max)
+    {
+        timeSpawn = _timeDelay;
+        min = _min;
+        max = _max;
     }
     public void AddEnemy(Enemy enemy)
     {

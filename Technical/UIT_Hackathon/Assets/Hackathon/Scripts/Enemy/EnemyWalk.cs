@@ -31,6 +31,7 @@ public class EnemyWalk : Enemy {
     public override void OnMouseDown()
     {
         base.OnMouseDown();
+
     }
 
 }

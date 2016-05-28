@@ -1,17 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using DG.Tweening;
-using System.Collections.Generic;
-public enum TypeEnemy
-{
-    NONE = 0,
-    WALK = 1,
-    RUN = 2,
+public class Boss : MonoBehaviour {
 
-}
-public class Enemy : MonoBehaviour {
 
-    
+
     public bool isCheat;
     public TypeEnemy type;
     public Vector3 speed;
@@ -21,12 +14,14 @@ public class Enemy : MonoBehaviour {
     private float timeChangeDir = 0;
     private bool isPause;
     public CircleCollider2D circleCol;
-	// Use this for initialization
-	void Start () {
+    private int countTap = 5;
+    // Use this for initialization
+    void Start()
+    {
         ItemPause.ActionOnPause += Pause;
         ItemPause.ActionOnResumne += Resumne;
-	}
-	void Pause()
+    }
+    void Pause()
     {
         isPause = true;
     }
@@ -35,8 +30,9 @@ public class Enemy : MonoBehaviour {
         isPause = false;
     }
     private bool isAddList = false;
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update()
+    {
 
         if (!isPause && !isTouch)
         {
@@ -47,9 +43,9 @@ public class Enemy : MonoBehaviour {
             if (!isAddList)
             {
                 if (posTarget == null)
-                { 
+                {
                     posTarget = BoundEnemy.main.GetPosTarget();
-                    if(posTarget == pos)
+                    if (posTarget == pos)
                     {
                         posTarget = BoundEnemy.main.transEnd;
                     }
@@ -76,24 +72,31 @@ public class Enemy : MonoBehaviour {
         {
             Move();
         }
-	}
-    public  Transform posTarget;
+    }
+    public Transform posTarget;
     public virtual void OnMouseDown()
     {
-        if (!isTouch && TouchController.main.isTouch)
+        if (countTap <= 0)
         {
-            posTarget = BoundEnemy.main.GetPosTarget();
-            Test();
-            isPause = false;
-            TouchController.main.isMiss = false;
-            Meseggbox();
-            posTarget = BoundEnemy.main.GetPosTarget();
-            BoundEnemy.main.AddListWait(this);
+            if (!isTouch && TouchController.main.isTouch)
+            {
+                posTarget = BoundEnemy.main.GetPosTarget();
+                Test();
+                isPause = false;
+                TouchController.main.isMiss = false;
+                Meseggbox();
+                posTarget = BoundEnemy.main.GetPosTarget();
+                //BoundEnemy.main.AddListWait(this);
+            }
+        }
+        else
+        {
+            countTap--;
         }
     }
     public void Test()
     {
-        
+
 
         if (circleCol != null)
             circleCol.isTrigger = true;
@@ -103,12 +106,12 @@ public class Enemy : MonoBehaviour {
         transform.SetParent(GameController.main.boundEnemy.transform);
         //transform.DOLocalMoveX(0, 0.3f, false).OnComplete(() => AddEnemy());
         //MoveTweenPos(BoundEnemy.main.transEnd.localPosition, TimeMove(transform.position, BoundEnemy.main.transform.position));
-        
+
         GameController.main.UpdateScore(1);
 
 
     }
-    float TimeMove(Vector3 pos,Vector3 posEnd)
+    float TimeMove(Vector3 pos, Vector3 posEnd)
     {
         float distance = Vector3.Distance(posEnd, pos);
         return distance / 2.5f;
@@ -116,7 +119,7 @@ public class Enemy : MonoBehaviour {
     public Vector3 posEnd;
     public virtual void Move()
     {
-        
+
     }
     public void MoveTweenPos(Vector3 pos, float time)
     {
@@ -127,7 +130,7 @@ public class Enemy : MonoBehaviour {
     {
         //speed = new Vector3(0, -6, 0);
         //SpawnEnemy.main.AddEnemy(this);
-        GameController.main.boundEnemy.AddListWait(this);
+        //GameController.main.boundEnemy.AddListWait(this);
         //speed = new vector3(0, -0.8f, 0);
         //isaddlist = true;
     }
@@ -153,7 +156,7 @@ public class Enemy : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if(col.tag == "Bound")
+        if (col.tag == "Bound")
         {
             speed = Vector3.zero;
         }
