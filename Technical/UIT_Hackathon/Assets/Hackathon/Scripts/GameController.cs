@@ -66,11 +66,13 @@ public class GameController : MonoBehaviour {
         txtScore.text = score.ToString();
         if(score == 10)
         {
-            SpawnEnemy.main.Design(1.5f, 2, 4);
+            SpawnEnemy.main.Design(3f, 2, 4);
+
         }
         if (score == 20)
         {
-            SpawnEnemy.main.Design(2, 3, 5);
+            SpawnEnemy.main.Design(2f, 3, 4);
+            //SpawnEnemy.main.CreateBoss();
         }
     }
     public void btPlay()

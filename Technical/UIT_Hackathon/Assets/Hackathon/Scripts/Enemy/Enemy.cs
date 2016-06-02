@@ -11,7 +11,7 @@ public enum TypeEnemy
 }
 public class Enemy : MonoBehaviour {
 
-    
+    public int countTap;
     public bool isCheat;
     public TypeEnemy type;
     public Vector3 speed;
@@ -63,7 +63,7 @@ public class Enemy : MonoBehaviour {
                     {
                         //Debug.Log("asdsaas");
                         isAddList = true;
-                        speed = new Vector3(0, -0.8f, 0);
+                        speed = new Vector3(0, -1.0f, 0);
                         transform.position = posTarget.position;
 
                     }
@@ -80,15 +80,23 @@ public class Enemy : MonoBehaviour {
     public  Transform posTarget;
     public virtual void OnMouseDown()
     {
-        if (!isTouch && TouchController.main.isTouch)
+        if (countTap <= 0)
         {
-            posTarget = BoundEnemy.main.GetPosTarget();
-            Test();
-            isPause = false;
-            TouchController.main.isMiss = false;
+            if (!isTouch && TouchController.main.isTouch)
+            {
+                posTarget = BoundEnemy.main.GetPosTarget();
+                Test();
+                isPause = false;
+                TouchController.main.isMiss = false;
+                Meseggbox();
+                posTarget = BoundEnemy.main.GetPosTarget();
+                BoundEnemy.main.AddListWait(this);
+            }
+        }
+        else
+        {
+            countTap--;
             Meseggbox();
-            posTarget = BoundEnemy.main.GetPosTarget();
-            BoundEnemy.main.AddListWait(this);
         }
     }
     public void Test()

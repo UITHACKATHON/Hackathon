@@ -19,6 +19,7 @@ public class SpawnEnemy : MonoBehaviour {
     private bool isSpawn = true;
     public static SpawnEnemy main;
     public Transform posEnd;
+    public GameObject boss;
 	// Use this for initialization
 	void Start () {
         main = this;
@@ -122,6 +123,18 @@ public class SpawnEnemy : MonoBehaviour {
         timeSpawn = _timeDelay;
         min = _min;
         max = _max;
+    }
+    public void CreateBoss()
+    {
+        GameObject enemy = Instantiate(boss, Vector3.zero, Quaternion.identity) as GameObject;
+        enemy.transform.SetParent(transform);
+        enemy.GetComponent<SpriteRenderer>().sortingOrder = 10000 - listEnemyCurrent.Count;
+        enemy.transform.position = new Vector3(Random.Range(-2.5f, 2.5f), transform.position.y, 0);
+        Enemy e = enemy.GetComponent<Enemy>();
+        if (enemy != null)
+        {
+            e.speed = new Vector3(0, -3, 0);
+        }
     }
     public void AddEnemy(Enemy enemy)
     {
